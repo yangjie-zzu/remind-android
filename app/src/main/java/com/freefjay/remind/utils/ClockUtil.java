@@ -1,6 +1,8 @@
 package com.freefjay.remind.utils;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -69,7 +71,7 @@ public class ClockUtil {
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> Toast.makeText(context, "定时任务", Toast.LENGTH_LONG).show());
             Location location = Async.await(SysUtil.getCurrentLocation(context));
-            NotificationUtil.createNotificationChannel(context, "remind", "remind", "remind");
+            NotificationUtil.createNotificationChannel(context, "remind", "remind", "remind", NotificationManager.IMPORTANCE_DEFAULT);
             Intent notifyIntent = new Intent(context, MainActivity.class);
             notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             String vibratorKey = UUID.randomUUID().toString();
@@ -81,6 +83,7 @@ public class ClockUtil {
                     .setContentText("打卡了 [" + cron + "] " + location)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setContentIntent(pendingIntent)
+                    .setOngoing(true)
                     .setAutoCancel(true);
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {

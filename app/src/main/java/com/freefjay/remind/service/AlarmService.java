@@ -4,6 +4,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import android.Manifest;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -47,7 +48,7 @@ public class AlarmService extends Service {
     public void onCreate() {
         super.onCreate();
         Notification notification = null;
-        NotificationUtil.createNotificationChannel(this, "REMIND_FOREGROUND_SERVICE", "service", "前台服务");
+        NotificationUtil.createNotificationChannel(this, "REMIND_FOREGROUND_SERVICE", "service", "前台服务", NotificationManager.IMPORTANCE_DEFAULT);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             Intent notifyIntent = new Intent(this, MainActivity.class);
             notifyIntent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -104,7 +105,7 @@ public class AlarmService extends Service {
                 Toast.makeText(this, "服务广播提醒", Toast.LENGTH_LONG).show();
                 Async.async(() -> {
                     Location location = Async.await(SysUtil.getCurrentLocation(this));
-                    NotificationUtil.createNotificationChannel(this, "remind", "remind", "remind");
+                    NotificationUtil.createNotificationChannel(this, "remind", "remind", "remind", NotificationManager.IMPORTANCE_MAX);
                     Intent notifyIntent = new Intent(this, MainActivity.class);
                     notifyIntent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     String vibratorKey = UUID.randomUUID().toString();
@@ -115,7 +116,7 @@ public class AlarmService extends Service {
                             .setSmallIcon(R.drawable.ic_launcher_background)
                             .setContentText("打卡提醒")
                             .setContentText("打卡了" + location)
-                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                            .setPriority(NotificationCompat.PRIORITY_MAX)
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true);
                     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);

@@ -17,9 +17,9 @@ import com.freefjay.remind.MyApplication;
 
 public class NotificationUtil {
 
-    public static void createNotificationChannel(Context context, String id, String name, String description) {
+    public static void createNotificationChannel(Context context, String id, String name, String description, int importance) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel(id, name, importance);
             channel.setDescription(description);
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
